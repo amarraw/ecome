@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}
+cart
+{% endblock title %}
+{% load cart %}
+{% load custom_filter %}
+{% block hero %}    {% endblock hero %}
+
+
+{% block body %}
+<section>
+    <div class="container mt-5">
+        <div class="border rounded p-4 m-4">
+            <p class="display-4 ml-4">Your Cart</p>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">sno.</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td><img style="height: 80px" class="" src="{{product.image.url}}" alt=""></td>
+                        <td>{{product.product_name}}</td>
+                        <td>{{product.price|currency}}</td>
+                        <td>{{product|cart_quantity:request.session.cart}}</td>
+                        <td>{{product|price_total:request.session.cart|currency}}</td>
+                      </tr>
+                    {% endfor %}
+                  
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th class="text-end" colspan="5">total</th>
+                        <th>{{products|total_cart_price:request.session.cart|currency}}</th>
+                    </tr>
+                </tfoot>
+              </table>
+            <div class="m-3 p-3" >
+                <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-outline-info text-dark border rounded col-lg-3  float-end">Check out</a>
+            </div>
+            <div class="text-bg-info">
+              {% if messages %}
+                {% for message in messages %}
+                  {% if message.tags %} {{message}} <br> {% endif %}
+                {% endfor %}
+              {% endif %}
+            </div>
+        </div>
+    </div>
+    
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Check Out Form</h5> <hr>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-body">
+          <div class="m-2 p-2">
+            <form action="/checkout/" method="POST">
+              {% csrf_token %}
+                <div class="form-group">
+                  <label for="">Address</label>
+                  <input type="text" name="address" class="form-control" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="">Phone</label>
+                  
+                  <input type="number" name="phone" class="form-control" id="" placeholder="">
+                </div>
+                <input type="submit" class="btn btn-outline-success mt-2 text-dark col-lg-6 float-end " value="Check Out">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Button trigger modal -->
+
+
+{% endblock body %}
+
+
+

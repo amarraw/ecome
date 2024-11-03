@@ -1,7 +1,7 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
-import six
+import six 
 
 class TokenGenrator(PasswordResetTokenGenerator):
     def _make_hash_value(self,user,timestamp):

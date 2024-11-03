@@ -2,7 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-# user = User.objects.all()
 
 class Contact(models.Model):
     name = models.CharField(max_length=50)

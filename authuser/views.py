@@ -10,7 +10,7 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from time import sleep
 from django.contrib.auth.forms import PasswordChangeForm
- 
+
 
 # authenticate
 from django.contrib.auth import authenticate, login, logout, get_user_model
@@ -54,7 +54,7 @@ def signup(request):
             return redirect("/auth/login/")
         else:
             messages.warning(request, "Password Doesn,t match")
-            redirect("/auth/signup/")
+            return redirect("/auth/signup/")
     return render(request, "authuser/signup.html")
 
 
@@ -68,7 +68,7 @@ class ActivateAccountViews(View):
         if user is not None and gererate_token.check_token(user, token):
             user.is_active = True
             user.save()
-            sleep(4)
+            sleep(1)
             messages.info(request, "Account Activated Successfully !!")
             return redirect("/auth/login/")
         return render(request, "404.html")
@@ -82,9 +82,9 @@ class user_login(View):
     return_url = None
 
     def get(self, request):
-        user_login.return_url = request.GET.get('return_url')
-        return render(request,'authuser/login.html')
-    
+        user_login.return_url = request.GET.get("return_url")
+        return render(request, "authuser/login.html")
+
     def post(self, request):
         username = request.POST.get("email", None)
         userpass = request.POST.get("pass1", None)
@@ -102,18 +102,16 @@ class user_login(View):
 
         if myuser is not None:
             login(request, myuser)
-            request.session['User'] = user.id 
+            request.session["User"] = user.id
             messages.success(request, "Login Successfully!")
             if user_login.return_url:
                 return HttpResponseRedirect(user_login.return_url)
             else:
                 user_login.return_url = None
-                return redirect('/')
+                return redirect("/")
         else:
             messages.info(request, "Invalid Credentials")
             return redirect("/auth/login/")
-
-
 
 
 def handlelogout(request):
@@ -125,18 +123,19 @@ def handlelogout(request):
 def page_not_found(request):
     return render(request, "404.html")
 
+
 def changepass(request):
     if request.user.is_authenticated:
         fm = PasswordChangeForm(user=request.user)
         if request.method == "POST":
             fm = PasswordChangeForm(user=request.user, data=request.POST)
-            
+
             if fm.is_valid():
                 fm.save()
                 messages.success(request, "password change successfully!!")
                 redirect("/auth/login/")
         else:
             fm = PasswordChangeForm(user=request.user)
-        return render(request,"changepass.html",{"form":fm})
+        return render(request, "changepass.html", {"form": fm})
 
-    return redirect('/auth/login/')
+    return redirect("/auth/login/")

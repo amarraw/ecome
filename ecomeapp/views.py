@@ -85,37 +85,42 @@ class Cart(View):
             request.session['cart'] = {}
         ids = list(request.session.get('cart').keys())
         products = Product.get_products_by_id(ids)
-        # print(products)
+        print(products)
         return render(request , 'cart.html' ,{"products":products} )
 
 class CheckOut(View):
     def post(self, request):
         address = request.POST.get('address')
         phone = request.POST.get('phone')
-        print(User)
+        # print(User)
         customer = request.session.get('User')
+        print(customer)
         cart = request.session.get('cart')
         products = Product.get_products_by_id(list(cart.keys()))
         print(products)
 
         print(address, phone , )
-        for product in products:
-            print(product.id)
-            order = Order(customer = User(id = customer), 
-                          product = product,
-                          price = product.price,
-                          address = address,
-                          phone = phone,
-                          quantity = cart.get(str(product.id)))
-            order.save()
-        request.session['cart'] = {}
-        messages.success(request,'Your order successfully placed')
+        if customer is not None:
+                for product in products:
+                    print(product.id)
+                    order = Order(customer = User(id = customer), 
+                            product = product,
+                            price = product.price,
+                            address = address,
+                            phone = phone,
+                            quantity = cart.get(str(product.id)))
+                    order.save()
+                request.session['cart'] = {}
+                messages.success(request,'Your order successfully placed')
+        else:
+            return redirect('login')
         
-
         return redirect('cart')
+    def get(self, request):
+        return render(request,'order.html')
 
-# from ecomeapp.middlewares.auth import auth_middleware
-# from django.utils.decorators import method_decorator
+
+
 
 class Orders(View):
     # @method_decorator(auth_middleware)

@@ -113,7 +113,8 @@ class CheckOut(View):
                 request.session['cart'] = {}
                 messages.success(request,'Your order successfully placed')
         else:
-            return redirect('login')
+            messages.success(request,'login is required')
+            return redirect('user_login')
         
         return redirect('cart')
     def get(self, request):

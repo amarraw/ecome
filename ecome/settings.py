@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'ecomeapp',
     'authuser',
     'order',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

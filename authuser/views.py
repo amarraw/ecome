@@ -5,22 +5,39 @@ from django.contrib import messages
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from .utils import gererate_token, TokenGenrator
-from django.utils.encoding import force_bytes, DjangoUnicodeDecodeError, force_str
+from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 from django.conf import settings
 from time import sleep
 from django.contrib.auth.forms import PasswordChangeForm
-
-
-# authenticate
+from order.models import Order
 from django.contrib.auth import authenticate, login, logout, get_user_model
 
-# from django.utils.encoding import force_text , DjangoUnicodeDecodeError
-# Create your views here.
+class Profile(View):
+    def post(self, request):
+        if request.user.is_authenticated:
+            fm = PasswordChangeForm(user=request.user, data=request.POST)
+            if fm.is_valid():
+                fm.save()
+                messages.success(request, "Password changed successfully!")
+                return redirect("/auth/login/")  # Redirect after successful password change
+        else:
+            fm = PasswordChangeForm(user=request.user)
+        return render(request, "authuser/profile.html", {"form": fm})
 
+    def get(self, request):
+        if request.user.is_authenticated:
+            fm = PasswordChangeForm(user=request.user)
+            customer = request.session.get('User')
+            orders = Order.get_orders_by_customer(customer)
+            return render(request, 'authuser/profile.html', {'form': fm, 'orders': orders})
+        else:
+            return redirect("/auth/login/") 
 
 def signup(request):
     if request.method == "POST":
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
         email = request.POST["email"]
         password = request.POST["pass1"]
         confirm_password = request.POST["pass2"]
@@ -34,6 +51,8 @@ def signup(request):
                 pass
             user = User.objects.create_user(email, email, password)
             user.is_active = False
+            user.first_name = first_name
+            user.last_name = last_name
             user.save()
             email_subject = "Active your Account"
             message = render_to_string(

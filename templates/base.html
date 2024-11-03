@@ -16,7 +16,6 @@
 
   <!-- Favicons -->
   <link href="{% static '/assets/image/logo.png' %}" rel="icon">
-  {% comment %} <link href="{% static '/assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon"> {% endcomment %}
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -28,46 +27,46 @@
   <link href="{% static '/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
   <link href="{% static '/assets/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
   <link href="{% static '/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
   <!-- Template Main CSS File -->
   <link href="{% static '/assets/css/style.css' %}" rel="stylesheet">
-
 </head>
 
 <body>
   <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top bg-dark" >
-    <div class="container d-flex align-items-center justify-content-between m-3">
+  <header id="header" class="fixed-top bg-dark " >
+    <div class="container d-flex align-items-center justify-content-between mt-2 mb-2">
       <h1 class="logo ms-5"><a href="/" class="logo"><img src="{% static '/assets/image/logo.png' %}" alt="" class="img-fluid">&nbsp&nbsp DUKAN</a></h1>
 
       <nav id="navbar" class="navbar ">
         <ul>
-          <li><a class="nav-link scrollto active" href="/">Home</a></li> 
+          <li><a class="nav-link scrollto active" href="{% url 'index' %}">Home</a></li> 
                 
-          <li><a class="nav-link scrollto" href="/seller/">Become Seller</a></li>
-          <li><a class="nav-link scrollto" href="/orders/">Order</a></li>
+          <li><a class="nav-link scrollto" href="{% url 'seller' %}">Become Seller</a></li>
+          <li><a class="nav-link scrollto" href="{% url 'orders' %}">Order</a></li>
           <li>
             
-            <a href="/cart/" type="button" class="btn btn-secondary bg-danger" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Bottom popover" data-html="true" id="popover">
+            <a href="{% url 'cart' %}" type="button" class="btn btn-secondary bg-danger" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Bottom popover" data-html="true" id="popover">
               cart ( <span id="cart">{{request.session.cart|length}}</span> )
             </a>
           </li>
           {% if request.user.is_authenticated %}
-          <li class="dropdown"><a href="#"><span> {{user.username}} </span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="/auth/changepass/">Change Password</a></li>
-              <a href="/auth/logout/">logout</a>
+          <li class="dropdown">
+            <a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ user.first_name }} {{ user.last_name }} </i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
+              <li><a class="dropdown-item" href="{% url 'user_logout' %}">Logout</a></li>
             </ul>
           </li>
         {% else %}
-        <li class="dropdown"><a href="#"><span>SignIn</span> <i class="bi bi-chevron-down"></i></a>
-          <ul>
-            <li><a href="/auth/signup/">SignUp</a></li>
-            <li><a href="/auth/login/">LogIn</a></li> 
-          </ul>
-        </li>
-        
+              <li><a class="dropdown-item" href="/auth/signup/">Sign Up</a></li>
+              <li><a class="dropdown-item" href="/auth/login/">Log In</a></li>
+
         {% endif %}
+        
           
         </ul>
 
@@ -96,60 +95,17 @@
 
 
     {% endblock body %}
-   
-
-  </main><!-- End #main -->
+  </main>
+  <br>
 <br>
-  <!-- ======= Footer ======= -->
+<br>
+<br>
   <footer id="footer">
-
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
-
-          <div class="col-lg-6 col-md-6 footer-contact">
-            <h3>DUKAN</h3>
-            <p>
-              btm 1 st stage <br>
-              Bangalore, IN 535022<br>
-               <br><br>
-              <strong>Phone:</strong> +91 98564565895<br>
-              <strong>Email:</strong> info@example.com<br>
-            </p>
-          </div>
-
-          {% comment %} <div class="col-lg-2 col-md-6 footer-links">
-            
-            
-          </div>
-
-          <div class="col-lg-3 col-md-6 footer-links">
-            
-          </div> {% endcomment %}
-
-          <div class="col-lg-6 col-md-6 footer-newsletter float-end">
-            <h4>Join Our Newsletter</h4>
-            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
     <div class="container d-md-flex py-4">
 
       <div class="me-md-auto text-center text-md-start">
         <div class="copyright">
           &copy; Copyright <strong><span>DUKAN</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/tempo-free-onepage-bootstrap-theme/ -->
         </div>
       </div>
       <div class="social-links text-center text-md-right pt-3 pt-md-0">
@@ -171,7 +127,9 @@
 
   <!-- Template Main JS File -->
   <script src="{% static '/assets/js/main.js' %}"></script>
-  
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

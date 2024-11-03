@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profile{% endblock title %}
+{% load cart %}
+{% load custom_filter %}
+{% load widget_tweaks %}
+{% block hero %}
+<section class="mt-5">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar with Profile Features -->
+            <div class="col-md-4 col-lg-3">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body text-center">
+                        <img src="{% static 'assets/image/profile.jpg' %}" alt="Profile Picture" class="rounded-circle img-fluid mb-3" style="width: 120px;">
+                        <h5 class="card-title mb-0">{{user.first_name}} {{user.last_name}}</h5>
+                        <p class="text-muted">{{user.username}}</p>
+                    </div>
+                </div>
+
+                <!-- Profile Navigation Links -->
+                <div class="list-group">
+                    <a href="#overview" class="list-group-item list-group-item-action active" data-bs-toggle="list">Overview</a>
+                    <a href="#orders" class="list-group-item list-group-item-action" data-bs-toggle="list">My Orders</a>
+                    <a href="#change-password" class="list-group-item list-group-item-action" data-bs-toggle="list">Change Password</a>
+                    <a href="#settings" class="list-group-item list-group-item-action" data-bs-toggle="list">Settings</a>
+                </div>
+            </div>
+
+            <!-- Profile Content Area -->
+            <div class="col-md-8 col-lg-9">
+                <div class="tab-content">
+                    <!-- Overview Section -->
+                    <div class="tab-pane fade show active" id="overview">
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Profile Overview</h5>
+                                <p>Welcome to your profile! Here you can manage your personal information, view orders, and update your settings.</p>
+                                
+                                <div class="card-body text-center">
+                                    <img src="{% static 'assets/image/profile.jpg' %}" alt="Profile Picture" class="rounded-circle img-fluid mb-3" style="width: 120px;">
+                                    <h5 class="card-title mb-0">{{user.first_name}} {{user.last_name}}</h5>
+                                    <p class="text-muted">{{user.username}}</p>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- My Orders Section -->
+                    <div class="tab-pane fade" id="orders">
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">sno.</th>
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Status</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in orders %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td><img style="height: 80px" class="" src="{{order.product.image.url}}" alt=""></td>
+                                            <td>{{order.product.product_name}}</td>
+                                            <td>{{order.price|currency}}</td>
+                                            <td>{{order.quantity}}</td>
+                                            <td>{{order.quantity|multiply:order.price}}</td>
+                                            <td>{{order.date}}</td>
+                                            
+                                            {% if order.status %}
+                                            <td>Complated</td>
+                                            {% else %}
+                                              <td>pending</td>
+                                            {% endif %}
+                                            
+                                          </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                  </table> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Change Password Section -->
+                    <div class="tab-pane fade" id="change-password">
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-body">
+                                <div class="card shadow-sm p-4">
+                                    <h5 class="card-title text-center">Change Password</h5>
+                                    <form action="{% url 'change_password' %}" method="POST" class="px-3">
+                                        {% csrf_token %}
+                                        
+                                        {% for field in form %}
+                                            <div class="form-group mb-4">
+                                                {{ field.label_tag }}
+                                                {{ field|add_class:"form-control" }}
+                                                {% if field.errors %}
+                                                    <div class="form-text text-danger">{{ field.errors|striptags }}</div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+
+                                        {% if messages %}
+                                            <div class="mb-3">
+                                                {% for message in messages %}
+                                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                                        {{ message }}
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                            <button type="submit" class="btn btn-danger btn-sm">Change Password</button>
+                                            <a href="/" class="btn btn-outline-success btn-sm">Back to Profile</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Section -->
+                    <div class="tab-pane fade" id="settings">
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Settings</h5>
+                                <p>Manage your account settings and preferences here.</p>
+                                <!-- Add settings options here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock hero %}

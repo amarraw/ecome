@@ -124,7 +124,6 @@ class CheckOut(View):
 
 
 class Orders(View):
-    # @method_decorator(auth_middleware)
     def get(self, request):
 
         customer = request.session.get('User')

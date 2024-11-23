@@ -36,11 +36,8 @@ orders
                         <td>{{order.quantity|multiply:order.price}}</td>
                         <td>{{order.date}}</td>
                         
-                        {% if order.status %}
-                        <td>Complated</td>
-                        {% else %}
-                          <td>pending</td>
-                        {% endif %}
+                        <td>{{order.status}}</td>
+                       
                         
                       </tr>
                     {% endfor %}

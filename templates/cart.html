@@ -44,9 +44,13 @@ cart
                     </tr>
                 </tfoot>
               </table>
-            <div class="m-3 p-3" >
+              {% if products %}
+              <div class="m-3 p-3" >
                 <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-outline-info text-dark border rounded col-lg-3  float-end">Check out</a>
             </div>
+              
+              {% endif %}
+            
             <div class="text-bg-info">
               {% if messages %}
                 {% for message in messages %}

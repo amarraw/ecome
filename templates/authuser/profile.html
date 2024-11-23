@@ -8,12 +8,22 @@
 {% block hero %}
 <section class="mt-5">
     <div class="container">
+        {% if messages %}
+                                            <div class="mb-3">
+                                                {% for message in messages %}
+                                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                                        {{ message }}
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
         <div class="row">
             <!-- Sidebar with Profile Features -->
             <div class="col-md-4 col-lg-3">
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body text-center">
-                        <img src="{% static 'assets/image/profile.jpg' %}" alt="Profile Picture" class="rounded-circle img-fluid mb-3" style="width: 120px;">
+                        <img src="{% static 'assets/image/defaultpic/profile.jpg' %}" alt="Profile Picture" class="rounded-circle img-fluid mb-3" style="width: 120px;">
                         <h5 class="card-title mb-0">{{user.first_name}} {{user.last_name}}</h5>
                         <p class="text-muted">{{user.username}}</p>
                     </div>
@@ -24,7 +34,7 @@
                     <a href="#overview" class="list-group-item list-group-item-action active" data-bs-toggle="list">Overview</a>
                     <a href="#orders" class="list-group-item list-group-item-action" data-bs-toggle="list">My Orders</a>
                     <a href="#change-password" class="list-group-item list-group-item-action" data-bs-toggle="list">Change Password</a>
-                    <a href="#settings" class="list-group-item list-group-item-action" data-bs-toggle="list">Settings</a>
+                    <a href="#settings" class="list-group-item list-group-item-action" data-bs-toggle="list">Contact Us</a>
                 </div>
             </div>
 
@@ -39,7 +49,7 @@
                                 <p>Welcome to your profile! Here you can manage your personal information, view orders, and update your settings.</p>
                                 
                                 <div class="card-body text-center">
-                                    <img src="{% static 'assets/image/profile.jpg' %}" alt="Profile Picture" class="rounded-circle img-fluid mb-3" style="width: 120px;">
+                                    <img src="{% static 'assets/image/defaultpic/profile.jpg'  %}" alt="Profile Picture" class="rounded-circle img-fluid mb-3" style="width: 120px;">
                                     <h5 class="card-title mb-0">{{user.first_name}} {{user.last_name}}</h5>
                                     <p class="text-muted">{{user.username}}</p>
                                 </div>  
@@ -133,9 +143,13 @@
                     <div class="tab-pane fade" id="settings">
                         <div class="card shadow-sm border-0 mb-4">
                             <div class="card-body">
-                                <h5 class="card-title">Settings</h5>
-                                <p>Manage your account settings and preferences here.</p>
-                                <!-- Add settings options here -->
+                                <h5 class="card-title">Contact Us</h5>
+                                <p>Have us call you</p>
+                                <form action="{% url 'callme' %}" method="POST">
+                                    {% csrf_token %}
+                                     
+                                    <button class="btn btn-outline-success btn-sm">call me</button>
+                                </form>
                             </div>
                         </div>
                     </div>

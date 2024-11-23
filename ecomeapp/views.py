@@ -99,24 +99,29 @@ class CheckOut(View):
         products = Product.get_products_by_id(list(cart.keys()))
         print(products)
 
-        print(address, phone , )
+        print(address, phone  )
         if customer is not None:
-                for product in products:
-                    print(product.id)
-                    order = Order(customer = User(id = customer), 
-                            product = product,
-                            price = product.price,
-                            address = address,
-                            phone = phone,
-                            quantity = cart.get(str(product.id)))
-                    order.save()
-                request.session['cart'] = {}
-                messages.success(request,'Your order successfully placed')
+            for product in products:
+                print(product.id)
+                order = Order(customer = User(id = customer), 
+                    product = product,
+                    price = product.price,
+                    address = address,
+                    phone = phone,
+                    quantity = cart.get(str(product.id)))
+            order.save()
+            request.session['cart'] = {}
+            messages.success(request,'Your order successfully placed')
         else:
-            messages.success(request,'login is required')
-            return redirect('user_login')
+            return redirect('login')
         
         return redirect('cart')
+    
+    def send_order_email(self, orders, customer_id, address, phone):
+        customer = User.objects.get(id=customer_id)
+        customer_email = customer_id.email
+        print(customer_email)
+
     def get(self, request):
         return render(request,'order.html')
 
@@ -124,6 +129,7 @@ class CheckOut(View):
 
 
 class Orders(View):
+    # @method_decorator(auth_middleware)
     def get(self, request):
 
         customer = request.session.get('User')

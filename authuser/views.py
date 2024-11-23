@@ -13,6 +13,11 @@ from django.contrib.auth.forms import PasswordChangeForm
 from order.models import Order
 from django.contrib.auth import authenticate, login, logout, get_user_model
 
+def call_me(request):
+    if request.method == "POST":
+        messages.success(request,f"we will get you soon {request.user.first_name + " " + request.user.last_name}")
+        return redirect("profile")
+
 class Profile(View):
     def post(self, request):
         if request.user.is_authenticated:
